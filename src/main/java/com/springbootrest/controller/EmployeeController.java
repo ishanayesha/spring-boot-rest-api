@@ -2,7 +2,6 @@ package com.springbootrest.controller;
 
 import java.util.List;
 
-import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,11 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springbootrest.model.Employee;
-import com.springbootrest.model.Role;
 import com.springbootrest.model.Task;
 import com.springbootrest.service.EmployeeService;
 import com.springbootrest.service.RoleSerivce;
@@ -63,7 +60,7 @@ public class EmployeeController {
 		Employee e=empService.getEmpById(empTask.getId());
 		Task task=taskService.getTaskById(empTask.getTaskId());
 		task.setEmp(e);
-		//e.setRole(roleService.getRoleById(empRole.getRoleId()));
+		System.out.println("task"+empTask.getTaskId()+"emp"+empTask.getId());
 		
 		HttpHeaders header=new HttpHeaders();
 		return new ResponseEntity<Void>(header,HttpStatus.CREATED);
