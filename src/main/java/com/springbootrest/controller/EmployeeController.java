@@ -31,17 +31,9 @@ public class EmployeeController {
 	@RequestMapping(value="/add",method=RequestMethod.POST,headers="Accept=application/json")
 	public ResponseEntity<Void> addEmp(@RequestBody Employee emp)
 	{
-        //int roleId = Integer.parseInt(hsr.getParameter("role"));
-        //if (roleId != 0) {
-            //Role role = new Role();
-            //role.setType("sasa");
-            //emp.setRole(role);
-		System.out.println("saman "+emp);
-		
+  
 		emp.setRole(roleService.getRoleById(1));
-        //}
-        //emp.setName(hsr.getParameter("name"));		
-		
+
 		empService.add(emp);
 		HttpHeaders header=new HttpHeaders();
 		return new ResponseEntity<Void>(header,HttpStatus.CREATED);
