@@ -2,7 +2,7 @@ package com.springbootrest.controller;
 
 import java.util.List;
 
-
+import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springbootrest.model.Employee;
+import com.springbootrest.model.Role;
+import com.springbootrest.model.Task;
 import com.springbootrest.service.EmployeeService;
 import com.springbootrest.service.RoleSerivce;
+import com.springbootrest.service.TaskSerivce;
 
 
 @RestController
@@ -26,17 +30,44 @@ public class EmployeeController {
 	private EmployeeService empService;
 	@Autowired
 	private RoleSerivce roleService;
+	@Autowired
+	private TaskSerivce taskService;
 	
 	@RequestMapping(value="/add",method=RequestMethod.POST,headers="Accept=application/json")
-	public ResponseEntity<Void> addEmp(@RequestBody Employee emp)
+	public ResponseEntity<Void> addEmp(@RequestBody EmployeeRole empRole)
 	{
-  
-		emp.setRole(roleService.getRoleById(1));
-
-		empService.add(emp);
+		//System.out.println(name + " saman kumara");
+		Employee e=new Employee();
+		e.setRole(roleService.getRoleById(empRole.getRoleId()));
+		e.setName(empRole.getName());
+		
+		empService.add(e);
 		HttpHeaders header=new HttpHeaders();
 		return new ResponseEntity<Void>(header,HttpStatus.CREATED);
 	}
+
+	@RequestMapping(value="/updateRole",method=RequestMethod.POST,headers="Accept=application/json")
+	public ResponseEntity<Void> updateEmpRole(@RequestBody EmployeeRole empRole)
+	{
+		Employee e=empService.getEmpById(empRole.getId());
+		e.setRole(roleService.getRoleById(empRole.getRoleId()));
+		
+		empService.updateEmp(e);
+		HttpHeaders header=new HttpHeaders();
+		return new ResponseEntity<Void>(header,HttpStatus.CREATED);
+	}	
+
+	@RequestMapping(value="/assignTask",method=RequestMethod.POST,headers="Accept=application/json")
+	public ResponseEntity<Void> assignTask(@RequestBody EmployeeTask empTask)
+	{
+		Employee e=empService.getEmpById(empTask.getId());
+		Task task=taskService.getTaskById(empTask.getTaskId());
+		task.setEmp(e);
+		//e.setRole(roleService.getRoleById(empRole.getRoleId()));
+		
+		HttpHeaders header=new HttpHeaders();
+		return new ResponseEntity<Void>(header,HttpStatus.CREATED);
+	}	
 	
 	@RequestMapping(value="/delete/{id}",method=RequestMethod.DELETE,headers="Accept=application/json")
 	public ResponseEntity<Void> removeEmp(@PathVariable("id") int id)
